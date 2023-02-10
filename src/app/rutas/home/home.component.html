@@ -1,0 +1,98 @@
+<div class="row" style="padding-left: 25px">
+    <div class="col">
+
+        <form (ngSubmit)="validarCampo()" autocomplete="off" [formGroup]="miFormulario">
+            <span class="form-text text-danger" *ngIf="validarViaje">
+                No se encontraron viajes para esta ruta
+            </span>
+            <!-- Campo de origen -->
+            <div class="mb-3 row">
+                
+                <div class="p-4 col-sm-9">
+                    <label class="col-form-label">Origen</label>
+                    <input type="text"
+                           placeholder="Ingrese el origen del pasajero"
+                           class="form-control"
+                           formControlName="origen"
+                           (keyup)="mayusOrigen(this)"
+                           maxlength="3"
+                           style="text-transform:uppercase">
+
+                    <span class="form-text text-danger" *ngIf="!validador">
+                        El valor no puede ser igual a destino
+                    </span>
+                </div>
+            </div>
+
+            <!-- Campo de destino -->
+            <div class="mb-3 row">
+                <div class="p-4 col-sm-9">
+                    <label class=" col-form-label">Destino</label>
+                    <input type="text"
+                           placeholder="Ingrese el destino del pasajero"
+                           style="text-transform:uppercase"
+                           class="form-control"
+                           maxlength="3"
+                           (keyup)="mayusDestino(this)"
+                           formControlName="destino">
+                    <span class="form-text text-danger" *ngIf="!validador">
+                        El valor no puede ser igual a origen
+                    </span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="p-4 col-sm-9">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Seleccione moneda</mat-label>
+                        <mat-select formControlName="moneda" (selectionChange)="cambioMoneda($event.value)">
+                          <mat-option *ngFor="let moneda of tipoMoneda" [value]="moneda">{{moneda}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col" style="padding-left: 25px">
+                <div class="row" *ngIf="rutaDirecta.length === 0">
+                    <span >Vuelos de con escalas</span>
+                    <div class="col" *ngFor="let rutai of rutaInicial; let i = index">
+                        <h1>{{rutai.departureStation}} - {{rutai.arrivalStation}}</h1>
+                        <h1>{{rutaFinal[i].departureStation}} - {{rutaFinal[i].arrivalStation}}</h1>
+                        <h1>Costo total vuelos: {{getObtenerPrecio(rutai)}}</h1>
+                    </div>
+                </div>
+
+            </div>
+            
+            <hr>
+            <div style="padding-left: 25px" *ngIf="rutaDirecta.length > 0">
+                
+                  <br>
+                <span >Vuelos de directo</span>
+                <div *ngFor="let rutaD of rutaDirecta">
+                    <h1>{{rutaD.departureStation}}-{{rutaD.arrivalStation}}</h1>
+                        <hr>
+                        <h1>Costo del vuelo</h1>
+                        <h1>{{moneda}}</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="p-4 col">
+                    <button type="submit"
+                            class="btn btn-primary float"
+                            [disabled]="miFormulario.invalid">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+
+
+
+        </form>
+
+    </div>
+</div>
+
+
+
